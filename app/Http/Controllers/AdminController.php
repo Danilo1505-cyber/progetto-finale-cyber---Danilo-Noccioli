@@ -27,6 +27,8 @@ class AdminController extends Controller
 
         //$financialData = json_decode($this->httpService->getRequest('http://localhost:8001/financialApp/user-data.php'));
         
+        $financialData = ['users' => []];
+
         try {
             // Effettua la richiesta HTTP
             $response = $this->httpService->getRequest('http://internal.finance:8001/user-data.php');
