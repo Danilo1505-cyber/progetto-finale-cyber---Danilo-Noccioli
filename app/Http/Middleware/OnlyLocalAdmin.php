@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 
 class OnlyLocalAdmin
@@ -22,10 +23,17 @@ class OnlyLocalAdmin
         $host = $request->header('Host');
 
         // Verifica se l'host è nell'elenco degli host consentiti
-        if (!in_array($host, $allowedHosts)) {
+        if (! in_array($host, $allowedHosts)) {
+            Log::warning('Unauthorized access attempt to local admin route', [
+                'user_id' => auth()->user()?->id,
+                'host' => $host,
+                'ip' => $request->ip(),
+                'route' => $request->path(),
+            ]);
+
             return redirect(route('homepage'))->with('alert', 'Not Authorized');
         }
 
         return $next($request);
     }
-}   
+}
