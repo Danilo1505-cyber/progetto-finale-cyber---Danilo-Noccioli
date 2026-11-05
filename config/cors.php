@@ -17,17 +17,17 @@ return [
 
     'paths' => ['/*', 'sanctum/csrf-cookie'],
 
-    'allowed_methods' => ['*'],
+    'allowed_methods' => ['GET', 'POST', 'PUT', 'DELETE'],
 
-    'allowed_origins' => ['*'],
+    'allowed_origins' => ['http://127.0.0.1:8000', 'http://cyber.blog:8000'],
 
     'allowed_origins_patterns' => [],
 
-    'allowed_headers' => ['*'],
+    'allowed_headers' => ['Content-Type', 'Authorization'],
 
-    'exposed_headers' => [],
+    'exposed_headers' => ['Authorization'],
 
-    'max_age' => 0,
+    'max_age' => 3600,
 
     'supports_credentials' => true,
 

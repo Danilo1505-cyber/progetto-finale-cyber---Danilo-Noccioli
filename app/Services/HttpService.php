@@ -19,27 +19,32 @@ class HttpService
     }
 
     public function getRequest($url)
-    {
-        $parsedUrl = parse_url($url);
+{
+    $parsedUrl = parse_url($url);
 
-        // Validate protocol
-        if (!in_array($parsedUrl['scheme'], $this->allowedProtocols)) {
-            return 'Protocol not allowed';
-        }
-       
-        // Validate domain
-        if (!isset($parsedUrl['host']) || !in_array($parsedUrl['host'], $this->allowedDomains)) {
-            return 'Domain not allowed';
-        }
-
-        // Aggiungi l'intestazione Referer per le richieste al server locale
-        $options['headers'] = ['Referer' => $this->refererHeader];
-
-        try {
-            $response = $this->client->request('GET', $url, $options);
-            return $response->getBody()->getContents();
-        } catch (RequestException $e) {
-            return 'Something went wrong: ' . $e->getMessage();
-        }
+    // Validate protocol
+    if (!in_array($parsedUrl['scheme'], $this->allowedProtocols)) {
+        return 'Protocol not allowed';
     }
+
+    // Validate domain
+    if (!isset($parsedUrl['host']) || !in_array($parsedUrl['host'], $this->allowedDomains)) {
+        return 'Domain not allowed';
+    }
+
+    // Validate role for internal/sensitive hosts
+    if (isset($parsedUrl['host']) && !auth()->user()->is_admin && $parsedUrl['host'] === 'internal.finance') {
+        return 'Accesso non autorizzato';
+    }
+
+    // Aggiungi l'intestazione Referer per le richieste al server locale
+    $options['headers'] = ['Referer' => $this->refererHeader];
+
+    try {
+        $response = $this->client->request('GET', $url, $options);
+        return $response->getBody()->getContents();
+    } catch (RequestException $e) {
+        return 'Something went wrong: ' . $e->getMessage();
+    }
+}
 }
