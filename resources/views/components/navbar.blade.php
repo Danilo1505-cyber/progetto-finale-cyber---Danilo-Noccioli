@@ -31,7 +31,7 @@
                         <li>
                             <hr class="dropdown-divider">
                         </li>
-                        <li><a class="dropdown-item" href="#" onclick="event.preventDefault(); document.querySelector('#form-logout').submit();">Logout</a></li>
+                       <li><a class="dropdown-item" href="#" id="logout-link">Logout</a></li>
                         <form action="{{route('logout')}}" method="POST" id="form-logout" class="d-none">
                             @csrf
                         </form>
