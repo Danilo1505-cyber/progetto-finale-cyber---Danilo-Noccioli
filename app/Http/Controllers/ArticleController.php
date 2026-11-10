@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Gate;
 
 class ArticleController extends Controller implements HasMiddleware
 {
@@ -102,16 +103,7 @@ class ArticleController extends Controller implements HasMiddleware
      */
     public function edit(Article $article)
     {
-        if (Auth::user()->id != $article->user_id) {
-            Log::warning('Tentativo di modifica di un articolo altrui', [
-                'user_id' => Auth::id(),
-                'ip' => request()->ip(),
-                'article_id' => $article->id,
-                'owner_id' => $article->user_id,
-            ]);
-
-            return redirect()->route('homepage')->with('alert', 'Accesso non consentito');
-        }
+        Gate::authorize('update', $article);
 
         return view('articles.edit', compact('article'));
     }
@@ -121,6 +113,8 @@ class ArticleController extends Controller implements HasMiddleware
      */
     public function update(Request $request, Article $article)
     {
+        Gate::authorize('update', $article);
+
         $request->validate([
             'title' => 'required|min:5|unique:articles,title,'.$article->id,
             'subtitle' => 'required|min:5',
@@ -174,6 +168,8 @@ class ArticleController extends Controller implements HasMiddleware
      */
     public function destroy(Article $article)
     {
+        Gate::authorize('delete', $article);
+
         foreach ($article->tags as $tag) {
             $article->tags()->detach($tag);
         }

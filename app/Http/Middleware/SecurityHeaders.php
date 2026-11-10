@@ -29,6 +29,7 @@ class SecurityHeaders
             "font-src 'self'; ".
             "connect-src 'self' http://127.0.0.1:5173 ws://127.0.0.1:5173 ws://localhost:5173; ".
             "frame-src 'none'; ".
+            "frame-ancestors 'none'; ".
             "object-src 'none'; ".
             "base-uri 'self'; ".
             "form-action 'self';"

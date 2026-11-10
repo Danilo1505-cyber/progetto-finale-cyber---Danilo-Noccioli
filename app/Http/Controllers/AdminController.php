@@ -10,6 +10,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Gate;
 
 class AdminController extends Controller
 {
@@ -59,6 +60,7 @@ class AdminController extends Controller
 
     public function setAdmin(User $user)
     {
+        Gate::authorize('setAdmin', $user);
         $previousValue = $user->is_admin;
 
         $user->is_admin = true;
@@ -77,6 +79,7 @@ class AdminController extends Controller
 
     public function setRevisor(User $user)
     {
+        Gate::authorize('setRevisor', $user);
         $previousValue = $user->is_revisor;
 
         $user->is_revisor = true;
@@ -94,6 +97,7 @@ class AdminController extends Controller
 
     public function setWriter(User $user)
     {
+        Gate::authorize('setWriter', $user);
         $previousValue = $user->is_writer;
 
         $user->is_writer = true;
